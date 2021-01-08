@@ -1,32 +1,29 @@
 const scheduler = require('node-schedule');
-const renewWeathers = require('./renewWeather');
 const slack = require('../modules/slack');
 const logger = require('../modules/logger');
-const RULES_HOUR = 19;
+const task = require('./task');
 
-async function runTask() {
+async function runTask(rulesHour, rulesMinute = 0) {
     const rules = new scheduler.RecurrenceRule();
 
-    rules.hour = RULES_HOUR;
+    rules.hour = rulesHour;
+    rules.minute = rulesMinute;
+
     try {
         scheduler.scheduleJob(rules, async function () {
             try {
-                logger.info(`Update Weathers: timestamp :${Date.now()}`);
-                await renewWeathers();
-                logger.info(`Done: Current timestamp :${Date.now()}`);
+                await task();
             } catch (err) {
                 logger.error(err.stack);
                 slack.send(
-                    'Batch Error : 갱신 실패, Batch Error log 확인 요망 (일어나... 일해야지..)'
+                    'Batch Error : 갱신 실패, Batch Error log 확인 요망'
                 );
             }
         });
     } catch (err) {
         logger.error(err.stack);
-        slack.send(
-            'Batch Error : 갱신 실패, Batch Error log 확인 요망 (일어나... 일해야지..)'
-        );
+        slack.send('Batch Error : 갱신 실패, Batch Error log 확인 요망');
     }
 }
 
-runTask();
+runTask(0, 7);

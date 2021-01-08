@@ -8,19 +8,6 @@ async function selectLocationsAll() {
     return locations;
 }
 
-async function a() {
-    const locations = await Location.findOne({
-        where: {
-            id: 1
-        }
-    });
-    if (locations === null) {
-        console.log(locations);
-    }
-    console.log(locations);
-    return locations;
-}
-a();
 module.exports = {
     getLocationsAll: selectLocationsAll
 };

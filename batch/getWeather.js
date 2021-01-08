@@ -1,7 +1,7 @@
 const request = require('request-promise');
 
 const openweatherConfig = require('../config/openWeatherApi.json');
-const weatherIds = require('../config/weather_id.json');
+const climateIds = require('../config/climateIds.json');
 
 module.exports = async function getWeather(lat, lon, locationId) {
     //parameters: (위도, 경도, 행정코드)
@@ -41,6 +41,15 @@ function changeToHourlyDBSaveFormat(weathers, locationId) {
         const { dt, temp: temperature, weather, pop } = h;
         const { id, icon } = weather[0];
 
+        if (
+            typeof dt !== 'number' ||
+            typeof temperature !== 'number' ||
+            typeof pop !== 'number' ||
+            typeof id !== 'number' ||
+            typeof icon !== 'string'
+        ) {
+            throw Error('Hourly Open weather api variable was changed!');
+        }
         const dateTime = new Date(dt * 1000);
         const hour = dateTime.getHours();
         const date = [
@@ -50,16 +59,6 @@ function changeToHourlyDBSaveFormat(weathers, locationId) {
         ].join('-');
 
         const climateId = changeToWeatherId(id, icon);
-
-        if (
-            typeof date !== 'string' ||
-            typeof hour !== 'number' ||
-            typeof temperature !== 'number' ||
-            typeof pop !== 'number' ||
-            typeof climateId !== 'number'
-        ) {
-            throw Error('Hourly Open weather api variable was changed!');
-        }
 
         hourlyData.push({
             date,
@@ -129,11 +128,11 @@ function changeToDailyDBSaveFormat(weathers, locationId) {
 }
 
 function changeToWeatherId(weatherId, iconId) {
-    const weathyIds = Object.keys(weatherIds);
+    const climateIdArray = Object.keys(climateIds);
     const dayNight = iconId.slice(-1);
 
-    for (let id of weathyIds) {
-        const idSet = new Set(weatherIds[id].ids);
+    for (let id of climateIdArray) {
+        const idSet = new Set(climateIds[id].ids);
 
         if (idSet.has(weatherId)) {
             if (dayNight === 'd') {
