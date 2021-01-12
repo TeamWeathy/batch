@@ -47,11 +47,10 @@ const logger = createLogger({
     ]
 });
 
-if (env !== 'production') {
-    logger.add(
-        new transports.Console({
-            format: format.combine(format.colorize(), format.simple())
-        })
-    );
-}
+logger.add(
+    new transports.Console({
+        format: format.combine(format.colorize(), format.simple())
+    })
+);
+
 module.exports = logger;

@@ -60,15 +60,18 @@ function changeToHourlyDBSaveFormat(weathers, locationId) {
 
         const climateId = changeToWeatherId(id, icon);
 
-        hourlyData.push({
-            date,
-            hour,
-            temperature,
-            pop: 100 * pop,
-            climate_id: climateId,
-            location_id: locationId
-        });
+        if (climateId !== -1) {
+            hourlyData.push({
+                date,
+                hour,
+                temperature,
+                pop: 100 * pop,
+                climate_id: climateId,
+                location_id: locationId
+            });
+        }
     }
+
     return hourlyData;
 }
 
