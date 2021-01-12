@@ -4,7 +4,9 @@ const logger = require('../modules/logger');
 const task = require('./task');
 
 module.exports = async function runTask(rulesHour, rulesMinute = 0) {
-    logger.info(`Start Weather Batch : every ${rulesHour} o'Clock`);
+    logger.info(
+        `Start Weather Batch : every ${rulesHour} o'Clock (mode: ${process.env.NODE_ENV})`
+    );
 
     const rules = new scheduler.RecurrenceRule();
 
