@@ -24,16 +24,41 @@ db.DailyWeather = require('./dailyWeather')(sequelize, Sequelize);
 db.Location = require('./location')(sequelize, Sequelize);
 db.Climate = require('./climate')(sequelize, Sequelize);
 
-db.Location.hasMany(db.HourlyWeather, { onDelete: 'cascade' });
-db.HourlyWeather.belongsTo(db.Location);
+db.Location.hasMany(
+    db.HourlyWeather,
+    { foreignKey: 'location_id' },
+    { onDelete: 'RESTRICT' }
+);
+db.HourlyWeather.belongsTo(db.Location, {
+    foreignKey: 'location_id'
+});
 
-db.Location.hasMany(db.HourlyWeather, { onDelete: 'cascade' });
-db.DailyWeather.belongsTo(db.Location);
+db.Location.hasMany(
+    db.HourlyWeather,
+    { foreignKey: 'location_id' },
+    { onDelete: 'RESTRICT' }
+);
+db.DailyWeather.belongsTo(db.Location, {
+    foreignKey: 'location_id'
+});
 
-db.Climate.hasMany(db.DailyWeather, { onDelete: 'cascade' });
-db.DailyWeather.belongsTo(db.Climate);
+db.Climate.hasMany(
+    db.DailyWeather,
+    { foreignKey: 'climate_id' },
+    { onDelete: 'RESTRICT' }
+);
+db.DailyWeather.belongsTo(db.Climate, {
+    foreignKey: 'climate_id'
+});
 
-db.Climate.hasMany(db.HourlyWeather, { onDelete: 'cascade' });
-db.HourlyWeather.belongsTo(db.Climate);
+db.Climate.hasMany(
+    db.HourlyWeather,
+    { foreignKey: 'climate_id' },
+    { onDelete: 'RESTRICT' }
+);
+db.HourlyWeather.belongsTo(db.Climate, {
+    foreignKey: 'climate_id',
+    targetKey: 'icon_id'
+});
 
 module.exports = db;
